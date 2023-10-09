@@ -41,10 +41,22 @@ const Classroom = () => {
     // Manage Filtered Student Array
     useEffect(() => {
         const updateFilteredStudents = students.filter(student => {
+            // Check Name
             const fullName = `${student.name.first} ${student.name.last}`.toLowerCase();
-            const nameMatch = fullName.includes(nameInputVal.trim().toLowerCase());
-            const majorMatch = student.major.toLowerCase().includes(majorInputVal.trim().toLowerCase());
-            const interestMatch = student.interests.join('').toLowerCase().includes(interestInputVal.trim().toLowerCase());
+            const nameInputArray = nameInputVal.trim().toLowerCase().split(' ');
+            const nameMatch = nameInputArray.some(inputName =>
+                fullName.includes(inputName));
+
+            // Check Major
+            const majorInputArray = majorInputVal.trim().toLowerCase().split(' ');
+            const majorMatch = majorInputArray.some(inputMajor =>
+                student.major.toLowerCase().includes(inputMajor));
+
+            // Check Interests
+            const interestInputArray = interestInputVal.trim().toLowerCase().split(' ');
+            const interestMatch = interestInputArray.some(inputInterest =>
+                    student.interests.join('').toLowerCase().includes(inputInterest));
+            
             return nameMatch && majorMatch && interestMatch;
         })
         setFilteredStudents(filteredStudents => updateFilteredStudents)
@@ -118,11 +130,17 @@ const Classroom = () => {
         </Container>
         <br/>
         <Pagination>
-            <Pagination.Item onClick={() => setActivePage(activePage => activePage - 1)} disabled={activePage <= 1}>
+            <Pagination.Item
+                onClick={() => setActivePage(activePage => activePage - 1)}
+                disabled={activePage <= 1}
+            >
                 Previous
             </Pagination.Item>
             {buildPaginator()}
-            <Pagination.Item onClick={() => setActivePage(activePage => activePage + 1)} disabled={activePage >= lastPage}>
+            <Pagination.Item
+                onClick={() => setActivePage(activePage => activePage + 1)}
+                disabled={activePage >= lastPage}
+            >
                 Next
             </Pagination.Item>
         </Pagination>
